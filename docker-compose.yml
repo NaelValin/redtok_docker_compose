@@ -1,0 +1,54 @@
+version: '2'
+
+services:
+  app:
+    image: 'nv2thegod/mon-backend:latest'
+    container_name: app
+    ports:
+      - '8080:8080'
+    depends_on:
+      - db
+      - neo4j
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/RedtokDB
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=wow121966
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - SPRING_NEO4J_URI=bolt://neo4j:7687
+      - SPRING_NEO4J_AUTHENTICATION_USERNAME=neo4j
+      - SPRING_NEO4J_AUTHENTICATION_PASSWORD=wow121966
+      - SPRING_NEO4J_DATABASE=RedtokDB
+      - GOOGLE_APPLICATION_CREDENTIALS=configFirebase.json
+  db:
+    image: 'postgres:14.11'
+    container_name: db
+    ports:
+      - '5433:5432'
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=wow121966
+      - POSTGRES_DB=RedtokDB
+    volumes:
+      - ./data:/var/lib/postgresql/data
+
+  neo4j:
+    image: neo4j:latest
+    container_name: neo4j
+    ports:
+      - '7474:7474'   # Port HTTP pour Neo4j Browser
+      - '7687:7687'   # Port Bolt pour la connexion à la base de données
+    environment:
+      - NEO4J_AUTH=neo4j/wow121966
+      - NEO4J_dbms_default__database=RedtokDB
+
+    volumes:
+      - neo4j_data:/data
+      - neo4j_logs:/logs
+      - neo4j_import:/var/lib/neo4j/import
+      - neo4j_plugins:/plugins
+
+volumes:
+  neo4j_data:
+  neo4j_logs:
+  neo4j_import:
+  neo4j_plugins:
