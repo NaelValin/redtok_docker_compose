@@ -36,9 +36,7 @@ services:
       - neo4j_plugins:/plugins
 
   app:
-    image: 'docker-spring-boot-postgres:latest'
-    build:
-      context: .
+    image: 'nv2thegod/mon-backend:latest'
     container_name: app
     ports:
       - '8080:8080'
